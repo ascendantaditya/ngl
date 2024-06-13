@@ -26,8 +26,9 @@ export interface User extends Document {
     password: string;
     verifyCode: string;
     verifyCodeExpiry: Date;
+    isVerified: boolean;
     isAcceptingMessage: boolean;
-    message: Message[]
+    messages: Message[]
 }
 
 const UserSchema: Schema<User> = new Schema({
@@ -52,6 +53,24 @@ const UserSchema: Schema<User> = new Schema({
     verifyCode: {
         type: String,
         required: [true,"VerifyCode is required"],
-    }
+    },
+    verifyCodeExpiry: {
+        type: Date,
+        required: [true,"VerifyCodeExpiry is required"],
+    },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    isAcceptingMessage: {
+        type: Boolean,
+        default: true,
+    },
+    messages: [MessageSchema]
 
 })
+
+
+const UserModel = (mongoose.models.User as mongoose.Model<User>) || mongoose.model("User",UserSchema)
+
+export default UserModel
